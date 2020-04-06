@@ -1,0 +1,67 @@
+package sample;
+
+import javafx.application.Platform;
+import javafx.scene.canvas.GraphicsContext;
+
+public class Operation {
+    int levelNumber = 1;
+
+
+    Menu menu = new Menu();
+    Game game = new Game();
+
+    public void levelRender( GraphicsContext gc, double t)
+    {
+        switch(levelNumber)
+        {
+            case 0:
+            {
+                break;
+            }
+            case 1:
+            {
+                menu.render(gc, t);
+                break;
+            }
+            case 2:
+            {
+                game.render(gc,t);
+                break;
+            }
+        }
+    }
+    public void levelTick( Input input, int tickCount)
+    {
+        switch(levelNumber)
+        {
+            case 0:
+            {
+                Platform.exit();
+                break;
+            }
+            case 1:
+            {
+                menu.activate();
+                menu.tick(input);
+                if(menu.exit())
+                {
+                    menu.deactivate();
+                    levelNumber = menu.destination();
+                }
+                break;
+            }
+            case 2:
+            {
+                game.activate();
+
+                game.tick(input, tickCount);
+                if(game.exit())
+                {
+                    game.deactivate();
+                    levelNumber = game.destination();
+                }
+                break;
+            }
+        }
+    }
+}

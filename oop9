@@ -1,0 +1,137 @@
+package sample;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+
+public class Menu
+{
+    boolean isPlaySelected = true;
+    boolean isActive;
+
+    boolean shouldExit = false;
+    boolean toggle = true;
+
+    public void render(GraphicsContext gc, double time)
+    {
+        if(isActive){
+            gc.setFill(Color.web("#132226"));
+            gc.fillRect(0, 0, 725, 768);
+
+            gc.setFill(Color.WHITESMOKE);
+            gc.setFont(new Font( 50));
+            gc.setTextAlign(TextAlignment.CENTER);
+
+            gc.fillText("BRICK BREAKER GAME", 350, 140);
+            gc.setFont(new Font(50));
+
+            gc.setFont(new Font(20));
+            gc.fillText("This game is created for the purpose of our", 350, 300);
+            gc.fillText("OOP subject!", 350, 330);
+
+            if (Score.getScore() > 0)
+            {
+                gc.setFont(new Font(30));
+                if (Score.getScore() == Score.getFullScore())
+                {
+                    gc.fillText("YOU HAVE WON!!", 350, 420);
+                }
+                else
+                {
+                    gc.fillText("SCORE : " + Score.getScore(), 350, 420);
+                }
+            }
+
+            gc.setFont(new Font(50));
+            if(isPlaySelected)
+            {
+                gc.setFill(Color.web("#BE9063"));
+            }
+            else
+            {
+                gc.setFill(Color.web("#A4978E"));
+            }
+            gc.fillText("Play", 200, 500);
+
+            if(isPlaySelected)
+            {
+                gc.setFill(Color.web("#A4978E"));
+            }
+            else
+            {
+                gc.setFill(Color.web("#BE9063"));
+            }
+            gc.fillText("Exit", 470, 500);
+
+            if(isPlaySelected)
+            {
+                gc.setFill(Color.web("#BE9063"));
+                gc.fillRect(150, 520, 100, 10);
+
+            }
+            else
+            {
+                gc.setFill(Color.web("#BE9063"));
+                gc.fillRect(420, 520, 100, 10);
+            }
+
+        }
+    }
+
+    public void tick(Input input)
+    {
+        if(this.isActive){
+            if(input.left && toggle)
+            {
+                isPlaySelected = true;
+                toggle = false;
+
+            }
+            else if(input.right && toggle)
+            {
+                isPlaySelected = false;
+                toggle = false;
+            }
+            else if(input.enter)
+            {
+                shouldExit = true;
+            }
+            else if(!input.right && !input.left)
+            {
+                toggle = true;
+            }
+        }
+
+    }
+
+    public boolean exit()
+    {
+        return shouldExit;
+    }
+
+    public int destination()
+    {
+        if(isPlaySelected)
+        {
+            return 2;
+        }
+        else{
+            return 0;
+        }
+    }
+    public void activate()
+    {
+        this.isActive = true;
+        if(shouldExit = true)
+        {
+
+            this.shouldExit = false;
+        }
+    }
+    public void deactivate()
+    {
+        this.isActive = false;
+    }
+
+}

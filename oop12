@@ -1,0 +1,22 @@
+package sample;
+
+public class Score {
+    private static int score;
+    private static int fullScore;
+
+    public static int getScore() {
+        return score;
+    }
+
+    public static void setScore(int score) {
+        Score.score = score;
+    }
+
+    public static int getFullScore() {
+        return fullScore;
+    }
+
+    public static void setFullScore(int fullScore) {
+        Score.fullScore = fullScore;
+    }
+}

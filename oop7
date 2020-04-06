@@ -1,0 +1,13 @@
+package sample;
+
+public class Life {
+    private static int life;
+
+    public static int getLife() {
+        return life;
+    }
+
+    public static void setLife(int life) {
+        Life.life = life;
+    }
+}

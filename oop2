@@ -1,0 +1,136 @@
+package sample;
+
+import javafx.scene.paint.Color;
+
+
+public class Brick
+{
+    int xPos;
+    int yPos;
+    int health;
+    int sizeX = 40;
+    int sizeY = 20;
+    int lower;
+    int left;
+    int right;
+    int top;
+    Color shade;
+    boolean notBroke = true;
+
+    public Brick(int x,int y, int health)
+    {
+        this.xPos = x;
+        this.yPos = y;
+        this.health = health;
+        top = yPos;
+        lower = yPos+sizeY;
+        right = xPos;
+        left = xPos + sizeX;
+
+    }
+
+    Color getShade()
+    {
+        if(health == 1)
+        {
+            shade = Color.web("#9199BE");
+        }
+        else if(health ==2)
+        {
+            shade = Color.web("#54678F");
+        }
+        else if(health ==3)
+        {
+            shade = Color.web("#2E303E");
+        }
+        return shade;
+    }
+
+    boolean hit()
+    {
+        Score.setScore(Score.getScore()+1);
+
+        health --;
+        if(health <= 0)
+        {
+            health = 0;
+            notBroke = false;
+            return true;
+        }
+        return false;
+    }
+
+    boolean ballDetect(Ball ball)
+    {
+        if(notBroke)
+        {
+            if(ball.xPos <left &&ball.xPos >right)
+            {
+                if((ball.yPos+15) ==lower)
+                {
+                    ball.reflectY();
+                    return hit();
+                }
+                else if(ball.yPos==top )
+                {
+                    ball.reflectY();
+                    return hit();
+                }
+            }
+            else if(ball.yPos < lower && ball.yPos>top)
+            {
+                if(ball.xPos ==right)
+                {
+                    ball.reflectX();
+                    return hit();
+                }
+                else if (ball.xPos == left)
+                {
+                    ball.reflectX();
+                    return hit();
+                }
+            }
+        }
+        return false;
+    }
+
+    boolean detect(Ball ball)
+    {
+        if(notBroke)
+        {
+            if(ball.xPos <left &&ball.xPos >right)
+            {
+                if(ball.yPos ==lower)
+                {
+                    ball.reflectY();
+                    return hit();
+                }
+                else if(ball.yPos ==top )
+                {
+                    ball.reflectY();
+                    return hit();
+                }
+            }
+            else if(ball.yPos < lower && ball.yPos>top)
+            {
+                if(ball.xPos ==right)
+                {
+                    ball.reflectX();
+                    return hit();
+                }
+                else if (ball.xPos == left)
+                {
+                    ball.reflectX();
+                    return hit();
+                }
+            }
+        }
+        return false;
+    }
+
+    void kill()
+    {
+        this.health = 0;
+        this.notBroke = false;
+    }
+}

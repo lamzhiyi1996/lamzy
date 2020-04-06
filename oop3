@@ -1,0 +1,54 @@
+package sample;
+
+public class BrickArrangement
+{
+    int cross = 14;
+    int down = 3;
+    Brick bricks[][] = new Brick[down][cross];
+
+    public BrickArrangement()
+    {
+        init();
+    }
+
+    void init()
+    {
+        for(int i =0; i < down;i++)
+        {
+            for(int j = 0; j <cross;j++)
+            {
+                bricks[i][j] = new Brick((j * 50)+15,(i *50)+10,3);
+            }
+        }
+
+        Score.setFullScore(cross * down);
+    }
+
+    int checkAll(Ball ball)
+    {
+        int numberKilled = 0;
+        for(int i =0; i <down;i++)
+        {
+            for(int j=0; j<cross;j++)
+            {
+                if(bricks[i][j].detect(ball))
+                {
+                    numberKilled++;
+                }
+
+            }
+        }
+        return numberKilled;
+    }
+
+    void killAll()
+    {
+        for(int i=0;i<down;i++)
+        {
+            for(int j=0; j<cross;j++)
+            {
+                bricks[i][j].kill();
+            }
+        }
+    }
+}

@@ -1,0 +1,161 @@
+package sample;
+
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
+
+public class Game
+{
+    boolean ballOnPaddle = true;
+    boolean shouldExit = false;
+    boolean isActive;
+
+    int livesLeft = 3;
+
+    Paddle paddle = new Paddle();
+    Ball ball = new Ball();
+    BrickArrangement brickArray = new BrickArrangement();
+    Brick tempBrick;
+
+    int killed = 0;
+
+    public void render(GraphicsContext gc, double time)
+    {
+        if(isActive)
+        {
+            gc.setFill(Color.web("#A4978E"));
+            gc.fillRect(0, 0, 725, 768);
+
+            gc.setFill(Color.WHITESMOKE);
+            gc.setFont(new Font( 50));
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("SCORE : " + Score.getScore(), 350, 300);
+
+            gc.setFont(new Font( 20));
+            gc.setTextAlign(TextAlignment.CENTER);
+            gc.fillText("Life Left : " + this.livesLeft, 100, 750);
+
+            gc.setFill(Color.web("#132226"));
+            gc.fillRect(paddle.xPos, paddle.yPos, paddle.xSize, paddle.ySize);
+            gc.fillOval(ball.xPos, ball.yPos, ball.xSize, ball.ySize);
+
+            for(int i = 0; i<brickArray.down;i++)
+            {
+                for(int j = 0; j < brickArray.cross; j++)
+                {
+                    tempBrick = brickArray.bricks[i][j];
+                    gc.setFill(tempBrick.getShade());
+                    if(tempBrick.notBroke)
+                    {
+                        gc.fillRect(tempBrick.xPos, tempBrick.yPos, tempBrick.sizeX, tempBrick.sizeY);
+                    }
+                }
+            }
+
+            gc.setFont(new Font( 20));
+            gc.setTextAlign(TextAlignment.LEFT);
+
+            gc.setFill(Color.web("#2E303E"));
+            gc.fillRect(300, 725, 30, 30);
+
+            gc.setFill(Color.WHITESMOKE);
+            gc.fillText("Full", 335, 750);
+
+            gc.setFill(Color.web("#54678F"));
+            gc.fillRect(400, 725, 30, 30);
+
+            gc.setFill(Color.WHITESMOKE);
+            gc.fillText("Half", 435, 750);
+
+            gc.setFill(Color.web("#9199BE"));
+            gc.fillRect(500, 725, 30, 30);
+
+            gc.setFill(Color.WHITESMOKE);
+            gc.fillText("Quarter", 535, 750);
+        }
+    }
+    public void tick(Input input, int tickCount)
+    {
+        if(isActive)
+        {
+            if(input.left)
+            {
+                paddle.decreaseXVec();
+            }
+            else if(input.right)
+            {
+                paddle.increaseXVec();
+            }
+
+            if(input.space)
+            {
+                ballOnPaddle = false;
+            }
+
+            if (input.escape)
+            {
+                shouldExit = true;
+            }
+
+            if (Score.getScore() > 0 && Score.getFullScore() == Score.getScore())
+            {
+                shouldExit = true;
+            }
+
+            if(tickCount % 2 ==0)
+            {
+                if(!input.left && !input.right)
+                {
+                    paddle.normalizeX();
+                }
+            }
+
+            paddle.xDelta();
+
+            if(ball.Delta(paddle, ballOnPaddle))
+            {
+                mistake();
+            }
+
+            killed += brickArray.checkAll(ball);
+        }
+    }
+
+    public boolean exit()
+    {
+        return shouldExit;
+    }
+    public void mistake()
+    {
+        this.livesLeft--;
+        if(this.livesLeft == 0)
+        {
+            shouldExit = true;
+        }
+
+        this.ballOnPaddle = true;
+    }
+    public int destination()
+    {
+        return 1;
+    }
+    public void activate()
+    {
+        this.isActive = true;
+        if(this.shouldExit == true)
+        {
+            this.livesLeft = 3;
+            shouldExit = false;
+            ballOnPaddle = true;
+            this.brickArray = new BrickArrangement();
+        }
+
+    }
+    public void deactivate()
+    {
+        this.isActive = false;
+    }
+
+
+}
